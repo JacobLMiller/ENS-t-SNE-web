@@ -2,11 +2,22 @@
 {% block content %}
 
 <div class="container-fluid" id="main-body">
-       <div class="row" id="main">
-        
-        </div>
-</div>
+    <div class="row" id="main">
+         <div class="col-2" id="sidebar">
+             <div class="interpcontainer">
+                 <input style="width: 100%;" type="range" min="0" max="1000" value="0" class="slider" id="interp-value"> 
+                 <p id="interp-text" style="text-align: center;"></p>
+             </div>          
+             <div class="play">
+                <button id="playButton">play</button>
+             </div>
+         </div>
 
+         <div class="col-10" >
+             <svg id="data-view"></svg>
+         </div>
+     </div>
+</div>
 
 {% endblock %}
 
@@ -18,9 +29,18 @@
         else document.addEventListener("DOMContentLoaded", callback);
       }
 
+
+
+
     ready(() => { 
         var data = {{data | tojson}};
 
+        let dataView = new Vis("#data-view", data);
+        dataView.draw();
+
+        setInterval(() => {
+            dataView.test();
+        },50)
     });
 
 </script>
