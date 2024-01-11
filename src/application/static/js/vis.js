@@ -76,8 +76,8 @@ class Vis {
         let xscale  = d3.scaleLinear().domain(xextent).range([this.#margin.left, width-this.#margin.right]); 
         let yscale  = d3.scaleLinear().domain(yextent).range([this.#margin.top, height - this.#margin.bottom]);
 
-        this.layer1.selectAll("circle")
-            .data(this.points, d => d.id)
+        this.layer1.selectAll(".points")
+            .data(this.points.filter(d => d.class[1] === 0), d => d.id)
             .join(
                 enter => enter.append("circle")
                     .attr("class", "points")
@@ -90,6 +90,22 @@ class Vis {
                     .attr("cy", d => yscale(d.y)),
                 exit => exit.remove()
             );
+
+        this.layer1.selectAll(".rects")
+            .data(this.points.filter(d => d.class[1] === 1), d => d.id)
+            .join(
+                enter => enter.append("rect")
+                    .attr("class", "points")
+                    .attr("x", d => xscale(d.x) - (this.#nodeRadiusLarge / 2))
+                    .attr("y", d => yscale(d.y) - (this.#nodeRadiusLarge / 2))
+                    .attr("width", d => this.#nodeRadiusLarge)
+                    .attr("height", d => this.#nodeRadiusLarge)
+                    .attr("fill", d => this.#colors[d.class[0]]),
+                update => update
+                    .attr("x", d => xscale(d.x) - (this.#nodeRadiusLarge ))
+                    .attr("y", d => yscale(d.y) - (this.#nodeRadiusLarge )),
+                exit => exit.remove()
+            );            
 
     }
 
@@ -110,9 +126,30 @@ class Vis {
         let mag2 = magnitude(u2);
         this.cur_projection[1] = u2.map(num => num / mag2);
 
-        console.log(newv);
         this.updatePositions();
         this.draw();
+
+        var data3D = [ [[0,-1,0],[-1,1,0],[1,1,0]] ];
+
+        var triangles3D = d3._3d()
+            .scale(100)
+            .origin([480, 250])
+            .shape('TRIANGLE');
+        
+        var projectedData = triangles3D(data3D);
+        var tthis = this;
+
+        
+        tthis.svg.selectAll('path').data(projectedData)
+        .append("path")
+        .d;
+        
+            // add your logic here...
+        
+        
+
     }
+
+    //
 
 }
