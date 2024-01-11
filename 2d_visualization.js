@@ -11,6 +11,10 @@ function projection_of_u_on_v(u,v){
     return u.map(el => el * alpha);
 }
 
+function scalar_x_vector(a,x){
+    return x.map(u => a * u);
+}
+
 function vectorSubtraction(u,v){
     return u.map((el,i) => el-v[i]);
 }
@@ -32,20 +36,22 @@ function pol_to_cart(v){
 }
 
 
-class Vis {
+class Vis2d {
     #nodeRadiusLarge = 5;
     #nodeRadiusSmall = 1;
 
     #colors = ["#4e79a7","#f28e2c","#e15759","#76b7b2","#59a14f","#edc949","#af7aa1","#ff9da7","#9c755f","#bab0ab"];
     #margin = {top: 15, bottom: 15, left:15, right:15};
 
-    constructor(svgID, data) {
+    constructor(svgID, data, start) {
         this.svg = d3.select(svgID);
         this.layer1 = this.svg.append("g");
 
         this.points = data.data;
         this.projections = data.projections;
-        this.cur_projection = this.projections[0];
+        this.cur_projection = this.projections[start];
+        this.cur_projection[0] = scalar_x_vector(1 / magnitude(this.cur_projection[0]), this.cur_projection[0])
+        this.cur_projection[1] = scalar_x_vector(1 / magnitude(this.cur_projection[1]), this.cur_projection[1])
 
         this.points.forEach((d,i) => d.id = i);
 
@@ -110,46 +116,5 @@ class Vis {
     }
 
 
-
-    test(){
-        
-        let newv = cart_to_pol(this.cur_projection[0]);
-        newv.lat += 0.001;
-        newv.long -= 0.01;
-
-        this.cur_projection[0] = pol_to_cart(newv);
-
-        let mag = magnitude(this.cur_projection[0]);
-        this.cur_projection[0] = this.cur_projection[0].map(num => num / mag);
-
-        let u2 = vectorSubtraction(this.cur_projection[1],projection_of_u_on_v(this.cur_projection[0],this.cur_projection[1]));
-        let mag2 = magnitude(u2);
-        this.cur_projection[1] = u2.map(num => num / mag2);
-
-        this.updatePositions();
-        this.draw();
-
-        var data3D = [ [[0,-1,0],[-1,1,0],[1,1,0]] ];
-
-        var triangles3D = d3._3d()
-            .scale(100)
-            .origin([480, 250])
-            .shape('TRIANGLE');
-        
-        var projectedData = triangles3D(data3D);
-        var tthis = this;
-
-        
-        tthis.svg.selectAll('path').data(projectedData)
-        .append("path")
-        .d;
-        
-            // add your logic here...
-        
-        
-
-    }
-
-    //
 
 }

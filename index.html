@@ -28,7 +28,9 @@
          </div>
 
          <div class="col-10" >
-             <svg id="data-view"></svg>
+             <svg id="data-view" style="width: 32%; height: 500px; border: 1px solid black;"></svg>
+             <svg id="view-1" style="width: 32%; height: 500px;  border: 1px solid black;"></svg>
+             <svg id="view-2" style="width: 32%; height: 500px;  border: 1px solid black;"></svg>
          </div>
      </div>
 </div>
@@ -37,7 +39,8 @@
 
 <script src="penguin_data.js"></script>
 
-<script src="visualization.js"></script>
+<script src="3d_visualization.js"></script>
+<script src="2d_visualization.js"></script>
 
 <script>
     var ready = (callback) => {
@@ -50,8 +53,14 @@
 
     ready(() => { 
 
-        let dataView = new Vis("#data-view", penguins_data);
+        let dataView = new Vis3d("#data-view", penguins_data);
         dataView.draw();
+
+        let view1 = new Vis2d("#view-1", penguins_data, 0);
+        view1.draw(); 
+
+        let view2 = new Vis2d("#view-2", penguins_data, 1);
+        view2.draw();
 
         setInterval(() => {
             dataView.test();
