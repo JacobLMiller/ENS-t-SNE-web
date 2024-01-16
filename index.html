@@ -74,9 +74,9 @@
             view2 = new Vis2d("#view-2", data, 1);
             view2.draw();
 
-            // setInterval(() => {
-            //     dataView.test();
-            // },50)
+            setInterval(() => {
+                dataView.test();
+            },50)
         }
 
         script.id = "data_script";
@@ -85,21 +85,21 @@
 
     });
 
-    data_select.addEventListener("change", () => {
+    // data_select.addEventListener("change", () => {
         
-        var data_name = data_select.value;
-        var script = document.getElementById('data_script');
-        script.src = `${data_name}_data.js`;
+    //     var data_name = data_select.value;
+    //     var script = document.getElementById('data_script');
+    //     script.src = `${data_name}_data.js`;
 
-        dataview.newData(data);
-        dataview.draw();
+    //     dataview.newData(data);
+    //     dataview.draw();
 
-        view1.newData(data);
-        view1.draw();
+    //     view1.newData(data);
+    //     view1.draw();
 
-        view2.newData(data);
-        view2.draw();
+    //     view2.newData(data);
+    //     view2.draw();
      
-    })
+    // })
 
 </script>
