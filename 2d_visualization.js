@@ -47,6 +47,12 @@ class Vis2d {
         this.svg = d3.select(svgID);
         this.layer1 = this.svg.append("g");
 
+        this.newData(data);
+    }
+
+
+
+    newData(data){
         this.points = data.data;
         this.projections = data.projections;
         this.cur_projection = this.projections[start];
@@ -56,7 +62,7 @@ class Vis2d {
         this.points.forEach((d,i) => d.id = i);
 
         this.updatePositions();
-    }
+}    
 
     updatePositions(){
         this.points.forEach(d => {

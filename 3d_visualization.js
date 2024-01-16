@@ -43,6 +43,10 @@ class Vis3d {
         this.svg = d3.select(svgID);
         this.layer1 = this.svg.append("g");
 
+        this.newData(data);
+    }
+
+    newData(data){
         this.points = data.data;
         this.projections = data.projections;
         this.cur_projection = this.projections[0];

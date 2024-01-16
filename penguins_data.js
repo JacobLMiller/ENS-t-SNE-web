@@ -1,4 +1,4 @@
-penguins_data = 
+data = 
   {
     "data": [
         {

@@ -45,8 +45,6 @@
 
 <script src="https://d3js.org/d3.v7.min.js"></script>
 
-<script src="penguin_data.js"></script>
-
 <script src="3d_visualization.js"></script>
 <script src="2d_visualization.js"></script>
 
@@ -56,23 +54,52 @@
         else document.addEventListener("DOMContentLoaded", callback);
       }
 
-
-
+    var dataview;
+    var view1;
+    var view2;
+    var data_select = document.getElementById("data");
 
     ready(() => { 
 
-        let dataView = new Vis3d("#data-view", penguins_data);
-        dataView.draw();
+        var data_name = data_select.value;
+        var script = document.createElement('script');
+        script.onload = function() {
 
-        let view1 = new Vis2d("#view-1", penguins_data, 0);
-        view1.draw(); 
+            dataView = new Vis3d("#data-view", data);
+            dataView.draw();
 
-        let view2 = new Vis2d("#view-2", penguins_data, 1);
-        view2.draw();
+            view1 = new Vis2d("#view-1", data, 0);
+            view1.draw(); 
 
-        setInterval(() => {
-            dataView.test();
-        },50)
+            view2 = new Vis2d("#view-2", data, 1);
+            view2.draw();
+
+            // setInterval(() => {
+            //     dataView.test();
+            // },50)
+        }
+
+        script.id = "data_script";
+        script.src = `${data_name}_data.js`;
+        document.head.appendChild(script);
+
     });
+
+    data_select.addEventListener("change", () => {
+        
+        var data_name = data_select.value;
+        var script = document.getElementById('data_script');
+        script.src = `${data_name}_data.js`;
+
+        dataview.newData(data);
+        dataview.draw();
+
+        view1.newData(data);
+        view1.draw();
+
+        view2.newData(data);
+        view2.draw();
+     
+    })
 
 </script>
