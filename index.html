@@ -16,6 +16,7 @@
 
 
 <div class="container-fluid" id="main-body">
+    ENS-t-SNE web application
     <div class="row" id="main">
          <div class="col-2" id="sidebar" style="height: 100px;">
             <label for="data">Choose a dataset:</label>
@@ -49,57 +50,53 @@
 <script src="2d_visualization.js"></script>
 
 <script>
-    var ready = (callback) => {
-        if (document.readyState != "loading") callback();
-        else document.addEventListener("DOMContentLoaded", callback);
-      }
 
-    var dataview;
-    var view1;
-    var view2;
-    var data_select = document.getElementById("data");
-
-    ready(() => { 
-
-        var data_name = data_select.value;
+    var attach_script = (data_name, dataView, view1, view2) => {
+    
         var script = document.createElement('script');
-        script.onload = function() {
+        
+        script.onload = () => {
 
-            dataView = new Vis3d("#data-view", data);
+            console.log(dataView);
+            dataView.newData(data);
             dataView.draw();
 
-            view1 = new Vis2d("#view-1", data, 0);
+            view1.newData(data,0);
             view1.draw(); 
 
-            view2 = new Vis2d("#view-2", data, 1);
+            view2.newData(data,1);
             view2.draw();
 
             setInterval(() => {
                 dataView.test();
-            },50)
+            },50);
         }
 
         script.id = "data_script";
         script.src = `${data_name}_data.js`;
         document.head.appendChild(script);
 
-    });
+    };
 
-    // data_select.addEventListener("change", () => {
-        
-    //     var data_name = data_select.value;
-    //     var script = document.getElementById('data_script');
-    //     script.src = `${data_name}_data.js`;
+    window.onload = () => {
 
-    //     dataview.newData(data);
-    //     dataview.draw();
+        var dataView    = new Vis3d("#data-view");
+        var view1       = new Vis2d("#view-1");
+        var view2       = new Vis2d("#view-2");
+        var data_select = document.getElementById("data");
 
-    //     view1.newData(data);
-    //     view1.draw();
+        attach_script(data_select.value, dataView, view1, view2);
 
-    //     view2.newData(data);
-    //     view2.draw();
-     
-    // })
+
+        data_select.addEventListener("change", () => {
+
+                attach_script(data_select.value, dataView, view1, view2);
+            
+            })
+
+
+    };
+
+    
 
 </script>

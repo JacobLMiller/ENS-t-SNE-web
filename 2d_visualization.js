@@ -43,11 +43,10 @@ class Vis2d {
     #colors = ["#4e79a7","#f28e2c","#e15759","#76b7b2","#59a14f","#edc949","#af7aa1","#ff9da7","#9c755f","#bab0ab"];
     #margin = {top: 15, bottom: 15, left:15, right:15};
 
-    constructor(svgID, data, start) {
+    constructor(svgID) {
         this.svg = d3.select(svgID);
         this.layer1 = this.svg.append("g");
 
-        this.newData(data, start);
     }
 
 
@@ -59,7 +58,7 @@ class Vis2d {
         this.cur_projection[0] = scalar_x_vector(1 / magnitude(this.cur_projection[0]), this.cur_projection[0])
         this.cur_projection[1] = scalar_x_vector(1 / magnitude(this.cur_projection[1]), this.cur_projection[1])
 
-        this.points.forEach((d,i) => d.id = i);
+        this.points.forEach((d,i) => d.id = `${data.name}_${i}`);
 
         this.updatePositions();
 }    
