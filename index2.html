@@ -17,29 +17,38 @@
 
     <script>
       // Select chartholder
-      var chartHolder = d3.select("#chartholder");
 
-      // Declare the chart component
-      var myChart = d3.x3d.chart.scatterPlot()
-        .mappings({ x: 'x', y: 'y', z: 'z', size: 'size', color: 'color' })
-        .colors(d3.schemeRdYlGn[8])
-        .sizeRange([0.1, 1.5]);
+      function loadChart(dat){
+        let chartHolder = d3.select("#chartholder");
+        var myChart = d3.x3d.chart.particlePlot()
+          .mappings({ x: 'x', y: 'y', z: 'z', size: 'size', color: 'color' })
+          .colors(d3.schemeCategory10.slice(0,3))
+        
+        chartHolder.datum(dat).call(myChart);
+      }
 
-      var refreshChart = function() {
         // Generate some data
-        var myData = d3.x3d.randomData.dataset6(200);
-        console.log(myData)
-        myData = {
-          'key': "penguins",
-          "values": null
-        }
+      var myData = d3.x3d.randomData.dataset6(200);
+      myData = {
+        'key': "penguins",
+        "values": data.data.map((n,i) => {
+          return {
+            "key": `Point${i}`,
+            "values": [
+              {"key": "size", "value": 0.1}, 
+              {"key": "color", "value": n.class[0]},
+              {"key": "x", "value": n.x3},
+              {"key": "y", "value": n.y3},
+              {"key": "z", "value": n.z3},                                
+            ]
+          }
+        })
+      }
+      console.log(myData)
 
-        chartHolder.datum(myData).call(myChart);
-      };
+      loadChart(myData);
 
-      d3.select("#refresh").attr("onclick", "refreshChart()");
 
-      refreshChart();
     </script>
 
     <br/>

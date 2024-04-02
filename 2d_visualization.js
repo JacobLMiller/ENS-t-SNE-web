@@ -35,6 +35,8 @@ function pol_to_cart(v){
     return [x,y,z];
 }
 
+const colorScale = d3.scaleOrdinal(d3.range(9), d3.schemeCategory10);
+const shapeScale = d3.scaleOrdinal(d3.range(9), d3.symbols.map(s => d3.symbol().type(s)()));
 
 class Vis2d {
     #nodeRadiusLarge = 5;
@@ -88,35 +90,47 @@ class Vis2d {
         let yscale  = d3.scaleLinear().domain(yextent).range([this.#margin.top, height - this.#margin.bottom]);
 
         this.layer1.selectAll(".points")
-            .data(this.points.filter(d => d.class[1] === 0), d => d.id)
+            .data(this.points, d => d.id)
             .join(
-                enter => enter.append("circle")
+                enter => enter.append("path")
                     .attr("class", "points")
-                    .attr("cx", d => xscale(d.x))
-                    .attr("cy", d => yscale(d.y))
-                    .attr("r",  this.#nodeRadiusLarge)
-                    .attr("fill", d => this.#colors[d.class[0]]),
-                update => update
-                    .attr("cx", d => xscale(d.x))
-                    .attr("cy", d => yscale(d.y)),
+                    .attr("transform", d => `translate(${xscale(d.x)},${yscale(d.y)})`)
+                    .attr("fill", d => colorScale(d.class[0]))
+                    .attr("d", d => shapeScale(d.class[1])), 
+                update => update.attr("transform", d => `translate(${xscale(d.x)},${yscale(d.y)})`), 
                 exit => exit.remove()
             );
 
-        this.layer1.selectAll(".rects")
-            .data(this.points.filter(d => d.class[1] === 1), d => d.id)
-            .join(
-                enter => enter.append("rect")
-                    .attr("class", "points")
-                    .attr("x", d => xscale(d.x) - (this.#nodeRadiusLarge / 2))
-                    .attr("y", d => yscale(d.y) - (this.#nodeRadiusLarge / 2))
-                    .attr("width", d => this.#nodeRadiusLarge)
-                    .attr("height", d => this.#nodeRadiusLarge)
-                    .attr("fill", d => this.#colors[d.class[0]]),
-                update => update
-                    .attr("x", d => xscale(d.x) - (this.#nodeRadiusLarge ))
-                    .attr("y", d => yscale(d.y) - (this.#nodeRadiusLarge )),
-                exit => exit.remove()
-            );            
+        // this.layer1.selectAll(".points")
+        //     .data(this.points.filter(d => d.class[1] === 0), d => d.id)
+        //     .join(
+        //         enter => enter.append("circle")
+        //             .attr("class", "points")
+        //             .attr("cx", d => xscale(d.x))
+        //             .attr("cy", d => yscale(d.y))
+        //             .attr("r",  this.#nodeRadiusLarge)
+        //             .attr("fill", d => this.#colors[d.class[0]]),
+        //         update => update
+        //             .attr("cx", d => xscale(d.x))
+        //             .attr("cy", d => yscale(d.y)),
+        //         exit => exit.remove()
+        //     );
+
+        // this.layer1.selectAll(".rects")
+        //     .data(this.points.filter(d => d.class[1] === 1), d => d.id)
+        //     .join(
+        //         enter => enter.append("rect")
+        //             .attr("class", "points")
+        //             .attr("x", d => xscale(d.x) - (this.#nodeRadiusLarge / 2))
+        //             .attr("y", d => yscale(d.y) - (this.#nodeRadiusLarge / 2))
+        //             .attr("width", d => this.#nodeRadiusLarge)
+        //             .attr("height", d => this.#nodeRadiusLarge)
+        //             .attr("fill", d => this.#colors[d.class[0]]),
+        //         update => update
+        //             .attr("x", d => xscale(d.x) - (this.#nodeRadiusLarge ))
+        //             .attr("y", d => yscale(d.y) - (this.#nodeRadiusLarge )),
+        //         exit => exit.remove()
+        //     );            
 
     }
 
