@@ -4,18 +4,47 @@
     <meta http-equiv="X-UA-Compatible" content="chrome=1" />
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
     <title>3D Scatter Plot</title>
-    <script type="text/javascript" src="http://d3js.org/d3.v3.min.js"></script>
-    <script type="text/javascript" src="http://x3dom.org/x3dom/dist/x3dom-full.js"></script>
-    <script type="text/javascript" src="scatter_plot_3d_demo.js"></script>
-    <link rel="stylesheet" type="text/css" href="http://www.x3dom.org/download/dev/x3dom.css"/>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://x3dom.org/release/x3dom.js"></script>
+    <link rel="stylesheet" href="https://x3dom.org/release/x3dom.css" />
+    <script src="https://raw.githack.com/jamesleesaunders/d3-x3d/master/dist/d3-x3d.js"></script>
+    <script src="penguins_data.js"></script>
   </head>
   <body>
-    <div id="divPlot"></div>
+    <div id="chartholder"></div>
+
+    <input type="button" id="refresh" value="Refresh"/>
+
     <script>
-      d3.select('html').style('height','100%').style('width','100%')
-      d3.select('body').style('height','100%').style('width','100%')
-      d3.select('#divPlot').style('width', "800px").style('height', "800px")
-      scatterPlot3d( d3.select('#divPlot'));
+      // Select chartholder
+      var chartHolder = d3.select("#chartholder");
+
+      // Declare the chart component
+      var myChart = d3.x3d.chart.scatterPlot()
+        .mappings({ x: 'x', y: 'y', z: 'z', size: 'size', color: 'color' })
+        .colors(d3.schemeRdYlGn[8])
+        .sizeRange([0.1, 1.5]);
+
+      var refreshChart = function() {
+        // Generate some data
+        var myData = d3.x3d.randomData.dataset6(200);
+        console.log(myData)
+        myData = {
+          'key': "penguins",
+          "values": null
+        }
+
+        chartHolder.datum(myData).call(myChart);
+      };
+
+      d3.select("#refresh").attr("onclick", "refreshChart()");
+
+      refreshChart();
     </script>
+
+    <br/>
+    <div style="clear: both">Created with <a href="https://github.com/jamesleesaunders/d3-x3d">d3-x3d</a> D3 X3D Data
+      Visualization Library.
+    </div>
   </body>
 </html>
