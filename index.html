@@ -27,6 +27,8 @@
                 <option value="food">USDA Food Composition</option>
                 <option value="auto">Auto-mpg</option>
             </select>
+            <br>
+            <button id="animateButton">Animate</button>
              <!-- <div class="interpcontainer">
                  <input style="width: 100%;" type="range" min="0" max="1000" value="0" class="slider" id="interp-value"> 
                  <p id="interp-text" style="text-align: center;"></p>
@@ -58,18 +60,15 @@
         script.onload = () => {
 
             console.log(dataView);
-            dataView.newData(data);
+            dataView.newData(data,data.projections[0]);
             dataView.draw();
 
-            view1.newData(data,0);
+            view1.newData(data,data.projections[0]);
             view1.draw(); 
 
-            view2.newData(data,1);
+            view2.newData(data,data.projections[1]);
             view2.draw();
 
-            setInterval(() => {
-                dataView.test();
-            },50);
         }
 
         script.id = "data_script";
@@ -80,7 +79,7 @@
 
     window.onload = () => {
 
-        var dataView    = new Vis3d("#data-view");
+        var dataView    = new Vis2d("#data-view");
         var view1       = new Vis2d("#view-1");
         var view2       = new Vis2d("#view-2");
         var data_select = document.getElementById("data");
@@ -92,7 +91,41 @@
 
                 attach_script(data_select.value, dataView, view1, view2);
             
-            })
+            });
+        
+        let button = document.getElementById("animateButton");
+        button.addEventListener("click", () => {
+            console.log(data.projections[0]);
+            console.log(data.projections[1]);
+
+            let start = data.projections[0];
+            let end = data.projections[1];
+
+            // let alpha = 0.5
+            // let test = start.map((out, outind) => {
+            //     return out.map((inn, innind) => {
+            //         return alpha * start[outind][innind] + (1-alpha) * end[outind][innind];
+            //     });
+            // });
+            
+            // dataView.updateProjection(test);
+            // dataView.updatePositions();
+            // dataView.draw();
+
+            const i = d3.interpolate(start, end);
+            console.log(i(0.5))
+            d3.range(0,1,0.05).forEach((alpha, ind) => {
+                setTimeout(() => {
+                    dataView.updateProjection(i(alpha));
+                    dataView.updatePositions();
+                    dataView.draw();
+                }, ind * 50);
+            });
+
+            data.projections[0] = end;
+            data.projections[1] = start;
+
+        })
 
 
     };
